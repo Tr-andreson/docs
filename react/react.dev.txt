@@ -1,0 +1,28 @@
+Quick Start 
+Installation
+Setup 
+
+read till now
+
+
+-- Describing the UI
+javascript library for creating user interfaces. UI is build from small units like button textfiled header footer .
+React lets you combine them with reusable nested components
+
+
+jsx synthatic extention for javascritp to write html like markput inside  of a function
+
+why we have to wrap multiple elements in a single tag like div or fragment
+jsx look like html but under the hood it is converted to javascript objects and a function cannot return two objects 
+
+
+Keys in React help it keep track of items in a list. When items are added, removed, or moved, React uses the keys to know which item is which, so it can update the screen efficiently.
+
+Think of keys like name tags on items — if each item has a unique name, React can quickly figure out what changed without redoing everything.
+
+
+keeping components pure
+functions thet only perform calculations and noting else . It can helps to identify unexptected behaviour and bugs  . when there is a large codebase
+
+
+

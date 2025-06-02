@@ -1,21 +1,9 @@
-# bun-react-tailwind-shadcn-template
+completed till
 
-To install dependencies:
+Managing State
+Escape hatches
 
-```bash
-bun install
-```
 
-To start a development server:
 
-```bash
-bun dev
-```
-
-To run for production:
-
-```bash
-bun start
-```
-
-This project was created using `bun init` in bun v1.2.15. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+want to read this for use case
+reffrence in react docs
