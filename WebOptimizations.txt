@@ -1,0 +1,15 @@
+https://web.dev/learn/performance
+
+web optimizations
+
+
+also try web.dev great resourse
+
+
+javascirpt.info
+
+
+work  on fixing quick order product list add image 
+work on fixing on close modal bug
+
+work on checking measurments and removing sample data

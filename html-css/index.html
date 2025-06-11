@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML/CSS Interview Flashcards</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-stat {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+        
+        progress {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+        }
+        
+        .flashcards-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+        }
+        
+        .flashcard {
+            width: 300px;
+            height: 220px;
+            perspective: 1000px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .flashcard:hover {
+            transform: translateY(-5px);
+        }
+        
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flashcard-front {
+            background-color: #3498db;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .flashcard-back {
+            background-color: #f1c40f;
+            transform: rotateY(180deg);
+            overflow-y: auto;
+            text-align: center;
+        }
+        
+        .answer-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .know-btn, .dont-know-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .know-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        
+        .know-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .dont-know-btn {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .dont-know-btn:hover {
+            background-color: #c0392b;
+        }
+        
+        .controls {
+            margin: 30px 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1a252f;
+        }
+        
+        .category-filter {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        select {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .category-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        
+        @media (max-width: 768px) {
+            .flashcard {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>HTML/CSS Interview Flashcards</h1>
+    
+    <div class="progress-container">
+        <div class="progress-bar">
+            <span class="progress-stat" id="total-questions">Total: 0</span>
+            <span class="progress-stat" id="known-questions">Known: 0</span>
+            <span class="progress-stat" id="remaining-questions">Remaining: 0</span>
+        </div>
+        <progress id="progress" value="0" max="100"></progress>
+    </div>
+    
+    <div class="category-filter">
+        <label for="category">Filter by category:</label>
+        <select id="category">
+            <option value="all">All Categories</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="layout">Layout</option>
+            <option value="responsive">Responsive Design</option>
+            <option value="accessibility">Accessibility</option>
+        </select>
+    </div>
+    
+    <div class="flashcards-container" id="flashcards">
+        <!-- Flashcards will be inserted here by JavaScript -->
+    </div>
+    
+    <div class="controls">
+        <button id="shuffle">Shuffle Cards</button>
+        <button id="reset">Reset All Cards</button>
+        <button id="reset-knowledge">Reset Knowledge</button>
+    </div>
+    
+    <script>
+        const flashcardsData = [
+            // HTML Questions
+            {
+                question: "What does HTML stand for?",
+                answer: "HyperText Markup Language. It's the standard markup language for creating web pages.",
+                category: "html"
+            },
+            {
+                question: "What is the purpose of the DOCTYPE declaration?",
+                answer: "The DOCTYPE declaration tells the browser which version of HTML the page is written in. It helps browsers to render content correctly.",
+                category: "html"
+            },
+            {
+                question: "What are semantic HTML elements?",
+                answer: "Semantic elements clearly describe their meaning to both the browser and developer (e.g., &lt;header&gt;, &lt;footer&gt;, &lt;article&gt;, &lt;section&gt;). They improve accessibility and SEO.",
+                category: "html"
+            },
+            {
+                question: "What is the difference between &lt;div&gt; and &lt;span&gt;?",
+                answer: "&lt;div&gt; is a block-level element used to group larger sections, while &lt;span&gt; is an inline element used for smaller portions of text or elements.",
+                category: "html"
+            },
+            {
+                question: "What is the purpose of the alt attribute in images?",
+                answer: "The alt attribute provides alternative text for screen readers and when images can't be displayed. It's important for accessibility and SEO.",
+                category: "html"
+            },
+            {
+                question: "What is the difference between &lt;ol&gt; and &lt;ul&gt;?",
+                answer: "&lt;ol&gt; creates an ordered (numbered) list, while &lt;ul&gt; creates an unordered (bulleted) list.",
+                category: "html"
+            },
+            {
+                question: "What are data attributes in HTML?",
+                answer: "Data attributes (data-*) allow you to store extra information in HTML elements without affecting presentation or behavior. They can be accessed via JavaScript.",
+                category: "html"
+            },
+            {
+                question: "What is the difference between &lt;strong&gt; and &lt;b&gt; tags?",
+                answer: "Both make text bold, but &lt;strong&gt; indicates importance (semantic), while &lt;b&gt; is just stylistic.",
+                category: "html"
+            },
+            {
+                question: "What is the purpose of the &lt;meta&gt; tag?",
+                answer: "The &lt;meta&gt; tag provides metadata about the HTML document, such as character set, viewport settings, description, and keywords for SEO.",
+                category: "html"
+            },
+            
+            // CSS Questions
+            {
+                question: "What does CSS stand for?",
+                answer: "Cascading Style Sheets. It's a stylesheet language used to describe the presentation of a document written in HTML.",
+                category: "css"
+            },
+            {
+                question: "What is the CSS box model?",
+                answer: "The CSS box model describes the rectangular boxes generated for elements, consisting of: content, padding, border, and margin.",
+                category: "css"
+            },
+            {
+                question: "What's the difference between margin and padding?",
+                answer: "Margin is the space outside the border (between elements), while padding is the space inside the border (between content and border).",
+                category: "css"
+            },
+            {
+                question: "Explain the difference between display: none and visibility: hidden",
+                answer: "display: none removes the element from the document flow (as if it doesn't exist). visibility: hidden hides the element but maintains its space in the layout.",
+                category: "css"
+            },
+            {
+                question: "What are CSS pseudo-classes?",
+                answer: "Pseudo-classes are keywords added to selectors that specify a special state of the selected element (e.g., :hover, :focus, :first-child).",
+                category: "css"
+            },
+            {
+                question: "What is the difference between rem and em units?",
+                answer: "em is relative to the font-size of its direct or nearest parent. rem is relative to the root (html) font-size.",
+                category: "css"
+            },
+            {
+                question: "What is BEM naming convention?",
+                answer: "BEM (Block, Element, Modifier) is a naming convention for CSS classes that aims to make code more maintainable and readable.",
+                category: "css"
+            },
+            {
+                question: "What are CSS variables?",
+                answer: "CSS variables (custom properties) allow you to store values (like colors, fonts) that you want to reuse throughout your stylesheet.",
+                category: "css"
+            },
+            {
+                question: "What is the z-index property?",
+                answer: "The z-index property specifies the stack order of elements (which appears in front when elements overlap). Higher values appear in front of lower values.",
+                category: "css"
+            },
+            {
+                question: "What is the difference between position: relative and position: absolute?",
+                answer: "position: relative positions an element relative to its normal position. position: absolute positions an element relative to its nearest positioned ancestor.",
+                category: "css"
+            },
+            {
+                question: "What is the CSS specificity and how does it work?",
+                answer: "Specificity determines which CSS rule is applied when multiple rules target the same element. It's calculated based on selector types (ID, class, element). ID selectors have higher specificity than class selectors, which have higher specificity than element selectors.",
+                category: "css"
+            },
+            
+            // Layout Questions
+            {
+                question: "What is Flexbox?",
+                answer: "Flexbox is a CSS layout model that allows responsive elements within a container to be automatically arranged depending on screen size.",
+                category: "layout"
+            },
+            {
+                question: "What is CSS Grid?",
+                answer: "CSS Grid is a two-dimensional layout system for the web that lets you lay content out in rows and columns.",
+                category: "layout"
+            },
+            {
+                question: "What's the difference between Flexbox and Grid?",
+                answer: "Flexbox is designed for one-dimensional layouts (row OR column), while Grid is designed for two-dimensional layouts (rows AND columns).",
+                category: "layout"
+            },
+            {
+                question: "What are the advantages of using CSS Grid?",
+                answer: "CSS Grid allows for complex layouts with less code, better control over both rows and columns, and easier responsive design without needing to modify HTML structure.",
+                category: "layout"
+            },
+            {
+                question: "How do you center an element horizontally and vertically?",
+                answer: "Multiple ways: 1) Flexbox: display: flex on parent with justify-content: center and align-items: center. 2) Grid: display: grid with place-items: center. 3) Absolute positioning with transform.",
+                category: "layout"
+            },
+            
+            // Responsive Design Questions
+            {
+                question: "What is responsive web design?",
+                answer: "Responsive web design is an approach where design and development respond to the user's behavior and environment based on screen size, platform, and orientation.",
+                category: "responsive"
+            },
+            {
+                question: "What are media queries in CSS?",
+                answer: "Media queries allow you to apply CSS styles depending on device characteristics (like width, height, orientation, resolution).",
+                category: "responsive"
+            },
+            {
+                question: "What is mobile-first design?",
+                answer: "Mobile-first design is an approach where you design for mobile devices first, then add enhancements for larger screens. It often results in better performance on mobile.",
+                category: "responsive"
+            },
+            {
+                question: "What is the difference between px, em, rem, vh, and vw units?",
+                answer: "px: absolute pixels. em: relative to parent's font-size. rem: relative to root font-size. vh: 1% of viewport height. vw: 1% of viewport width.",
+                category: "responsive"
+            },
+            
+            // Accessibility Questions
+            {
+                question: "What is ARIA and why is it important?",
+                answer: "ARIA (Accessible Rich Internet Applications) is a set of attributes that make web content more accessible to people with disabilities. It provides semantic meaning when native HTML isn't sufficient.",
+                category: "accessibility"
+            },
+            {
+                question: "What are some key principles of web accessibility?",
+                answer: "1) Perceivable: Available to senses. 2) Operable: Can be used regardless of input method. 3) Understandable: Clear and predictable. 4) Robust: Works with current and future technologies.",
+                category: "accessibility"
+            },
+            {
+                question: "How can you improve accessibility for visually impaired users?",
+                answer: "Use proper semantic HTML, provide alt text for images, ensure sufficient color contrast, make the site keyboard-navigable, and use ARIA when needed.",
+                category: "accessibility"
+            }
+        ];
+
+        const flashcardsContainer = document.getElementById('flashcards');
+        const categoryFilter = document.getElementById('category');
+        const shuffleBtn = document.getElementById('shuffle');
+        const resetBtn = document.getElementById('reset');
+        const resetKnowledgeBtn = document.getElementById('reset-knowledge');
+        const progressBar = document.getElementById('progress');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const knownQuestionsEl = document.getElementById('known-questions');
+        const remainingQuestionsEl = document.getElementById('remaining-questions');
+
+        let knownQuestions = JSON.parse(localStorage.getItem('knownQuestions')) || [];
+        let currentFilter = 'all';
+        
+        // Initialize the app
+        function init() {
+            createFlashcards();
+            updateProgress();
+        }
+        
+        // Create flashcards
+        function createFlashcards(filter = 'all') {
+            currentFilter = filter;
+            flashcardsContainer.innerHTML = '';
+            
+            const filteredCards = filter === 'all' 
+                ? flashcardsData 
+                : flashcardsData.filter(card => card.category === filter);
+            
+            // Sort cards: unknown first, known last
+            const sortedCards = [...filteredCards].sort((a, b) => {
+                const aKnown = knownQuestions.includes(a.question);
+                const bKnown = knownQuestions.includes(b.question);
+                return aKnown - bKnown;
+            });
+            
+            sortedCards.forEach((card, index) => {
+                const isKnown = knownQuestions.includes(card.question);
+                const flashcard = document.createElement('div');
+                flashcard.className = `flashcard ${isKnown ? 'known' : ''}`;
+                flashcard.dataset.category = card.category;
+                
+                flashcard.innerHTML = `
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <span class="category-tag">${card.category}</span>
+                            <p>${card.question}</p>
+                        </div>
+                        <div class="flashcard-back">
+                            <p>${card.answer}</p>
+                            <div class="answer-controls">
+                                <button class="know-btn">I Know This</button>
+                                <button class="dont-know-btn">I Don't Know</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                flashcard.addEventListener('click', (e) => {
+                    // Only flip if clicking on the card, not the buttons
+                    if (!e.target.classList.contains('know-btn') && !e.target.classList.contains('dont-know-btn')) {
+                        flashcard.classList.toggle('flipped');
+                    }
+                });
+                
+                // Add event listeners to the buttons
+                const knowBtn = flashcard.querySelector('.know-btn');
+                const dontKnowBtn = flashcard.querySelector('.dont-know-btn');
+                
+                knowBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    markAsKnown(card.question, true);
+                });
+                
+                dontKnowBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    markAsKnown(card.question, false);
+                });
+                
+                flashcardsContainer.appendChild(flashcard);
+            });
+        }
+
+        // Mark a question as known or unknown
+        function markAsKnown(question, isKnown) {
+            if (isKnown) {
+                if (!knownQuestions.includes(question)) {
+                    knownQuestions.push(question);
+                }
+            } else {
+                knownQuestions = knownQuestions.filter(q => q !== question);
+            }
+            
+            localStorage.setItem('knownQuestions', JSON.stringify(knownQuestions));
+            createFlashcards(currentFilter);
+            updateProgress();
+        }
+        
+        // Update progress bar and stats
+        function updateProgress() {
+            const total = currentFilter === 'all' ? flashcardsData.length : 
+                         flashcardsData.filter(card => card.category === currentFilter).length;
+            const known = currentFilter === 'all' ? knownQuestions.length : 
+                         knownQuestions.filter(q => {
+                             const card = flashcardsData.find(c => c.question === q);
+                             return card && card.category === currentFilter;
+                         }).length;
+            
+            progressBar.value = total > 0 ? (known / total) * 100 : 0;
+            totalQuestionsEl.textContent = `Total: ${total}`;
+            knownQuestionsEl.textContent = `Known: ${known}`;
+            remainingQuestionsEl.textContent = `Remaining: ${total - known}`;
+        }
+        
+        // Shuffle flashcards
+        function shuffleFlashcards() {
+            const container = document.getElementById('flashcards');
+            const cards = Array.from(container.children);
+            
+            // Fisher-Yates shuffle algorithm
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                container.insertBefore(cards[j], cards[i]);
+            }
+        }
+
+        // Reset all flashcards to front side
+        function resetFlashcards() {
+            document.querySelectorAll('.flashcard').forEach(card => {
+                card.classList.remove('flipped');
+            });
+        }
+        
+        // Reset all knowledge progress
+        function resetKnowledge() {
+            knownQuestions = [];
+            localStorage.setItem('knownQuestions', JSON.stringify(knownQuestions));
+            createFlashcards(currentFilter);
+            updateProgress();
+        }
+
+        // Event listeners
+        categoryFilter.addEventListener('change', (e) => {
+            createFlashcards(e.target.value);
+        });
+
+        shuffleBtn.addEventListener('click', shuffleFlashcards);
+        resetBtn.addEventListener('click', resetFlashcards);
+        resetKnowledgeBtn.addEventListener('click', resetKnowledge);
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
