@@ -11,5 +11,12 @@ javascirpt.info
 
 work  on fixing quick order product list add image 
 work on fixing on close modal bug
-
 work on checking measurments and removing sample data
+
+
+
+console.log("working")
+
+
+
+
